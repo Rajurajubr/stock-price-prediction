@@ -4,8 +4,3 @@ __pycache__/
 .env
 static/uploads/*
 !static/uploads/.gitkeep
-
-.venv/
-__pycache__/
-*.pyc
-.env
