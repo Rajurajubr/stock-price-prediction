@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StockSight AI | Stock Analysis</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-icon">↗</span> StockSight<span>AI</span></a>
+    <nav><a href="#dashboard">Dashboard</a><a href="#analysis">Analysis</a><a href="#upload">Image Lab</a></nav>
+    <span class="market-status"><i></i> Market analysis workspace</span>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">AI-ASSISTED MARKET RESEARCH</div>
+        <h1>See the market<br><em>from a new angle.</em></h1>
+        <p>Explore historical prices, estimate the next closing price, and understand the signals behind a stock chart.</p>
+        <a class="primary-link" href="#analysis">Start analysing <b>↘</b></a>
+      </div>
+      <div class="hero-visual">
+        <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div>
+        <div class="floating-card"><span class="tiny-label">MARKET MOMENTUM</span><strong>OHLCV</strong><div class="mini-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><small>Data-driven estimates</small></div>
+        <div class="hero-tag">↗ Pattern insights</div>
+      </div>
+    </section>
+
+    <section class="section-heading" id="dashboard">
+      <div><div class="eyebrow">WORKSPACE</div><h2>Market overview</h2></div>
+      <span class="subtle">Use a ticker supported by Yahoo Finance</span>
+    </section>
+    <section class="stats-grid">
+      <article class="stat-card"><span>MODEL</span><strong>Random Forest</strong><small>Regression demo</small></article>
+      <article class="stat-card"><span>INPUT DATA</span><strong>OHLCV</strong><small>Open · High · Low · Close · Volume</small></article>
+      <article class="stat-card"><span>CHART IMAGE</span><strong>Visual scan</strong><small>Basic color-count heuristic</small></article>
+      <article class="stat-card"><span>OUTPUT</span><strong>Next close</strong><small>Estimate, not a guarantee</small></article>
+    </section>
+
+    <section class="workspace" id="analysis">
+      <div class="panel analysis-panel">
+        <div class="panel-title"><div><div class="eyebrow">01 / PRICE FORECAST</div><h2>Analyse a stock</h2></div><span class="step">01</span></div>
+        <p class="panel-desc">Enter a market ticker. Examples: <b>RELIANCE.NS</b>, <b>TCS.NS</b>, <b>AAPL</b>.</p>
+        <form id="predict-form">
+          <label for="symbol">Stock symbol</label>
+          <div class="input-row"><input id="symbol" name="symbol" placeholder="e.g. RELIANCE.NS" required><button type="submit" id="predict-btn">Run AI analysis <span>→</span></button></div>
+        </form>
+        <div class="hint">Indian NSE tickers commonly use .NS; BSE tickers may use .BO.</div>
+        <div id="loading" class="loading hidden"><span class="spinner"></span> Fetching market data and training model…</div>
+        <div id="error" class="error hidden"></div>
+        <div id="result" class="result hidden">
+          <div class="result-top"><div><span class="tiny-label">MODEL OUTLOOK</span><h3 id="direction">—</h3></div><span class="direction-pill" id="direction-pill">—</span></div>
+          <div class="prediction-price"><span>Estimated next closing price</span><strong id="predicted">—</strong><small id="change">—</small></div>
+          <div class="result-grid">
+            <div><span>Latest close</span><b id="previous">—</b></div>
+            <div><span>Historical rows</span><b id="rows">—</b></div>
+            <div><span>Holdout MAE</span><b id="mae">—</b></div>
+            <div><span>Last data date</span><b id="date">—</b></div>
+          </div>
+          <div class="explanation"><b>Recent candle note</b><p id="candle-note"></p></div>
+          <p class="disclaimer" id="disclaimer"></p>
+        </div>
+      </div>
+
+      <div class="panel chart-panel">
+        <div class="panel-title"><div><div class="eyebrow">02 / VISUALISATION</div><h2>Prediction snapshot</h2></div><span class="chart-icon">⌁</span></div>
+        <p class="panel-desc">The chart compares the latest closing price with the model estimate.</p>
+        <div class="chart-wrap"><canvas id="prediction-chart"></canvas><div id="chart-empty" class="chart-empty">Run an analysis to view the comparison chart.</div></div>
+        <div class="chart-legend"><span><i class="legend-dot dot-blue"></i> Latest close</span><span><i class="legend-dot dot-green"></i> Estimated next close</span></div>
+      </div>
+    </section>
+
+    <section class="section-heading upload-heading" id="upload">
+      <div><div class="eyebrow">03 / IMAGE LAB</div><h2>Upload a candlestick chart</h2></div>
+      <span class="subtle">PNG · JPG · WEBP · max 8 MB</span>
+    </section>
+    <section class="panel upload-panel">
+      <form id="image-form" enctype="multipart/form-data">
+        <label class="upload-zone" for="chart-file">
+          <span class="upload-symbol">＋</span><strong>Choose your chart screenshot</strong>
+          <small>Click to select an image from your device</small>
+          <input type="file" id="chart-file" name="chart" accept=".png,.jpg,.jpeg,.webp,image/*" required>
+        </label>
+        <button class="secondary-btn" type="submit">Analyse chart image <span>→</span></button>
+      </form>
+      <div id="image-error" class="error hidden"></div>
+      <div id="image-result" class="image-result hidden">
+        <img id="uploaded-preview" alt="Uploaded candlestick chart preview">
+        <div><span class="tiny-label">BASIC VISUAL SCAN</span><h3 id="visual-bias"></h3><p id="visual-explanation"></p><small id="visual-limitation"></small></div>
+      </div>
+    </section>
+
+    <section class="note-strip"><span>ⓘ</span><p><b>Educational project:</b> Forecasts are uncertain estimates, not investment recommendations. A screenshot color scan cannot reliably identify candle patterns or predict prices. Always verify market data and consult a qualified adult/professional before making real financial decisions.</p></section>
+    <footer><a class="brand" href="#"><span class="brand-icon">↗</span> StockSight<span>AI</span></a><span>Built as an educational AI/ML project</span></footer>
+  </main>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
